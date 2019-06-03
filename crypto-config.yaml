@@ -1,0 +1,35 @@
+
+
+OrdererOrgs:
+  - Name: Orderer
+    Domain: hydratings.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+
+
+PeerOrgs:
+  - Name: Hyd
+    Domain: hydratings.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: batman.hydratings.com
+        CommonName: batman.hydratings.com
+    Users:
+      Count: 1
+
+  - Name: GGN
+    Domain: ggnratings.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: superman.ggnratings.com
+        CommonName: superman.ggnratings.com
+      - Hostname: wolverine.ggnratings.com
+        CommonName: wolverine.ggnratings.com
+    Users:
+      Count: 2
+
+
+
+  
+

@@ -1,0 +1,110 @@
+
+
+version: "2"
+
+networks:
+  superhero:
+
+services:
+
+  orderer.hydratings.com:
+
+    container_name: orderer.hydratings.com
+
+    extends:
+      file: ./docker/orderer-base.yaml
+      service: orderer-base
+
+    volumes:
+    - ./crypto-config/ordererOrganizations/hydratings.com/orderers/orderer.hydratings.com/msp:/var/hyperledger/orderer/msp
+    - ./crypto-config/ordererOrganizations/hydratings.com/orderers/orderer.hydratings.com/tls:/var/hyperledger/orderer/tls
+
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+
+    command: orderer
+    networks:
+      - superhero
+
+  batman.hydratings.com:
+
+    container_name: batman.hydratings.com
+
+    extends:
+      file: ./docker/core-base.yaml
+      service: peer-base
+
+    environment:
+        - CORE_PEER_ID=batman.hydratings.com        
+        - CORE_PEER_ADDRESS=batman.hydratings.com:7051
+        - CORE_PEER_GOSSIP_BOOTSTRAP=batman.hydratings.com:7051
+        - CORE_PEER_GOSSIP_EXTERNALENDPOINT=batman.hydratings.com:7051
+        - CORE_PEER_LOCALMSPID=hydratingsMSP
+
+    volumes:
+        - ./crypto-config/peerOrganizations/hydratings.com/peers/batman.hydratings.com/msp:/var/hyperledger/peer/msp
+        - ./crypto-config/peerOrganizations/hydratings.com/peers/batman.hydratings.com/tls:/var/hyperledger/peer/tls
+
+    command: peer node start
+
+    ports:
+      - 7051:7051
+      - 7053:7053
+
+    networks:
+      - superhero
+
+  superman.ggnratings.com:
+  
+    container_name: superman.ggnratings.com
+
+    extends:
+      file: ./docker/core-base.yaml
+      service: peer-base
+
+    environment:
+        - CORE_PEER_ID=superman.ggnratings.com        
+        - CORE_PEER_ADDRESS=superman.ggnratings.com:7051
+        - CORE_PEER_GOSSIP_BOOTSTRAP=wolverine.ggnratings.com:7051
+        - CORE_PEER_GOSSIP_EXTERNALENDPOINT=wolverine.ggnratings.com:7051
+        - CORE_PEER_LOCALMSPID=ggnratingsMSP
+
+    volumes:
+        - ./crypto-config/peerOrganizations/ggnratings.com/peers/superman.ggnratings.com/msp:/var/hyperledger/peer/msp
+        - ./crypto-config/peerOrganizations/ggnratings.com/peers/superman.ggnratings.com/tls:/var/hyperledger/peer/tls
+
+    command: peer node start
+
+    ports:
+      - 8051:7051
+      - 8053:7053
+
+    networks:
+      - superhero
+
+  wolverine.ggnratings.com:
+  
+    container_name: wolverine.ggnratings.com
+
+    extends:
+      file: ./docker/core-base.yaml
+      service: peer-base
+
+    environment:
+        - CORE_PEER_ID=wolverine.ggnratings.com        
+        - CORE_PEER_ADDRESS=wolverine.ggnratings.com:7051
+        - CORE_PEER_GOSSIP_BOOTSTRAP=wolverine.ggnratings.com:7051
+        - CORE_PEER_GOSSIP_EXTERNALENDPOINT=wolverine.ggnratings.com:7051
+        - CORE_PEER_LOCALMSPID=ggnratingsMSP
+
+    volumes:
+        - ./crypto-config/peerOrganizations/ggnratings.com/peers/wolverine.ggnratings.com/msp:/var/hyperledger/peer/msp
+        - ./crypto-config/peerOrganizations/ggnratings.com/peers/wolverine.ggnratings.com/tls:/var/hyperledger/peer/tls
+
+    command: peer node start
+
+    ports:
+      - 9051:7051
+      - 9053:7053
+
+    networks:
+      - superhero
