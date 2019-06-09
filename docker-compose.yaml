@@ -34,7 +34,7 @@ services:
       service: peer-base
 
     environment:
-        - CORE_PEER_ID=batman.hydratings.com        
+        - CORE_PEER_ID=batman.hydratings.com             
         - CORE_PEER_ADDRESS=batman.hydratings.com:7051
         - CORE_PEER_GOSSIP_BOOTSTRAP=batman.hydratings.com:7051
         - CORE_PEER_GOSSIP_EXTERNALENDPOINT=batman.hydratings.com:7051
@@ -108,3 +108,39 @@ services:
 
     networks:
       - superhero
+
+
+  cli:
+      container_name: cli
+      image: hyperledger/fabric-tools:1.4.1
+      tty: true
+      stdin_open: true
+      environment:
+        - GOPATH=/opt/gopath
+        - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+        #- FABRIC_LOGGING_SPEC=DEBUG
+        - FABRIC_LOGGING_SPEC=INFO
+        - CORE_PEER_ID=cli
+        - CORE_PEER_ADDRESS=batman.hydratings.com:7051
+        - CORE_PEER_LOCALMSPID=hydratingsMSP
+        - CORE_PEER_TLS_ENABLED=true
+        - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/peer/tls/server.crt
+        - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/peer/tls/server.key
+        - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/peer/tls/ca.crt
+        - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/peer/msp/peerOrganizations/hyd.spratings.com/users/Admin@hyd.spratings.com/msp
+      working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+      command: /bin/bash
+      volumes:
+          - /var/run/:/host/var/run/
+          - ./chaincode/:/opt/gopath/src/github.com/chaincode
+          - ./crypto-config/peerOrganizations/hydratings.com/peers/batman.hydratings.com/msp:/var/hyperledger/peer/msp
+          - ./crypto-config/peerOrganizations/hydratings.com/peers/batman.hydratings.com/tls:/var/hyperledger/peer/tls          
+          - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+          - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+      depends_on:
+          - orderer.hydratings.com
+          - batman.hydratings.com
+          - superman.hydratings.com
+          - wolverine.ggnratings.com
+      networks:
+        - ratings
